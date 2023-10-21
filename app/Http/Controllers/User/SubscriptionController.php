@@ -31,8 +31,10 @@ class SubscriptionController extends Controller
                 'start' => now(),
                 'end' => $plan->type == Plan::TYPE['annual'] ? now()->addYear() : now()->addMonth(),
             ]);
+
+            return redirect()->route('user.homePage')->with('success', "Subscribed to {$plan->name} plan successfully.");
         }
 
-        return redirect()->route('user.homePage')->with('success', "Subscribed to {$plan->name} plan successfully.");
+        return redirect()->route('user.homePage')->with('error', "Subscription failed ({$data['message']}).");
     }
 }
