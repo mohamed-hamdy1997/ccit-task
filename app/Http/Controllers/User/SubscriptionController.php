@@ -3,18 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\AdminLoginRequest;
-use App\Http\Requests\User\LoginRequest;
-use App\Http\Requests\User\SendLoginOtpRequest;
-use App\Http\Requests\User\SignupRequest;
 use App\Models\Plan;
 use App\Models\Subscription;
-use App\Models\User;
-use App\Services\TwilioService;
+use App\Services\MoyasarService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 
 class SubscriptionController extends Controller
 {
@@ -22,13 +14,12 @@ class SubscriptionController extends Controller
     {
         $planId = decrypt($encryptedPlanId);
         $plan = Plan::query()->find($planId);
-        if (!$plan) {
-//            error & refund
-        }
         $data = $request->all();
 
-        if ($plan->price != ($data['amount'] / 100)) {
-            //            error & refund
+        if (!$plan || $plan->price != ($data['amount'] / 100)) {
+            app(MoyasarService::class)->refundPayment($data['id']);
+
+            return redirect()->route('user.homePage')->with('error', "Something went wrong during payment.");
         }
 
         if ($data['status'] == 'paid' && $data['message'] == 'APPROVED') {
