@@ -4,6 +4,10 @@
     Home Page
 @endsection
 
+@section('styles')
+    <link rel="stylesheet" href="https://cdn.moyasar.com/mpf/1.12.0/moyasar.css" />
+@endsection
+
 @section('content')
     <div id="homePageSection" class="row">
         <div class="col-12">
@@ -13,9 +17,12 @@
                     <div class="right-aside ">
                         <h4 class="mb-n3">HI {{ auth()->user()->name }},
                             the below data for your subscription:-
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#plansModal">
-                                Subscribe to plan
-                            </button>
+                            @if(!$subscription)
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#plansModal">
+                                    Subscribe to plan
+                                </button>
+                            @endif
                         </h4>
                         <!-- Add Contact Popup Model -->
                         <div class="table-responsive">
@@ -41,10 +48,15 @@
                                             {{ $subscription->plan?->name }}
                                         </td>
                                         <td>{{ $subscription->price }}SAR</td>
-                                        <td>{{ $subscription->Status }}</td>
+                                        <td>{{ array_flip(\App\Models\Subscription::STATUSES)[$subscription->status] }}</td>
                                         <td>{{ $subscription->start }}</td>
                                         <td>{{ $subscription->end }}</td>
-                                        <td>--</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#plansModal">
+                                                Change Your Plan
+                                            </button>
+                                        </td>
                                     </tr>
                                 @endif
                                 </tbody>
@@ -56,7 +68,28 @@
                 </div>
             </div>
         </div>
-
         @include('users.plans-modal')
+        @include('users.moyasar-form-modal')
     </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdn.moyasar.com/mpf/1.12.0/moyasar.js"></script>
+
+    <script>
+        function initMoyasar(planId, price, planName) {
+            var callback = '{{ route('user.subscribeToPlan', ':id') }}'
+            callback = callback.replace(':id', planId);
+            Moyasar.init({
+                element: '.mysr-form',
+                amount: price * 100,
+                currency: 'SAR',
+                description: 'Subscribe to '+ planName + ' plan',
+                publishable_api_key: '{{ config('services.moyasar.public_key') }}',
+                callback_url: callback,
+                supported_networks: [ 'mada'],
+                methods: ['creditcard']
+            })
+        }
+    </script>
 @endsection

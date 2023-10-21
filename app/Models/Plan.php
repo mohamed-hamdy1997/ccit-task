@@ -24,4 +24,9 @@ class Plan extends Model
     {
         return $this->type == self::TYPE['monthly'] ? 'month' : 'year';
     }
+
+    public function getEncryptIdAttribute()
+    {
+        return encrypt($this->id);
+    }
 }
