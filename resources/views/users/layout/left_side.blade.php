@@ -11,6 +11,14 @@
                         <li><a href="{{route('user.logout')}}"><i class="fa fa-power-off"></i> Logout</a></li>
                     </ul>
                 </li>
+
+                <li> <a class="waves-effect waves-dark {{isActiveRoute('user.homePage')}}" href="{{ route('user.homePage') }}"><i class="ti-home"></i><span
+                            class="hide-menu">Home Page</span></a>
+                </li>
+
+                <li> <a class="waves-effect waves-dark {{isActiveRoute('user.payments.view')}}" href="{{ route('user.payments.view') }}"><i class="ti-credit-card"></i><span
+                            class="hide-menu">Payment History</span></a>
+                </li>
             </ul>
         </nav>
         <!-- End Sidebar navigation -->

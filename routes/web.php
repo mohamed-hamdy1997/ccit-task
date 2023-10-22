@@ -47,6 +47,7 @@ Route::group(['middleware' => ['admin']], function () {
 Route::group(['middleware' => ['user']], function () {
     Route::get('logout', [\App\Http\Controllers\User\AuthController::class, 'logout'])->name('user.logout');
     Route::get('home', [\App\Http\Controllers\User\HomeController::class, 'homePage'])->name('user.homePage');
+    Route::get('payments', [\App\Http\Controllers\User\PaymentController::class, 'index'])->name('user.payments.view');
 });
 
 Route::get('payment/subscribe-to-plan/{planId}', [\App\Http\Controllers\User\SubscriptionController::class, 'subscribeToPlan'])->name('user.subscribeToPlan');
