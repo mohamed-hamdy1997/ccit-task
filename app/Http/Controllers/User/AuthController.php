@@ -25,10 +25,9 @@ class AuthController extends Controller
     public function sendLoginOtp(SendLoginOtpRequest $request)
     {
         $phone = $request->validated()['phone_number'];
-//        $otp = rand(1000, 9999);
-        $otp = 1234;
+        $otp = rand(1000, 9999);
         Cache::put("login-otp-{$phone}", $otp, now()->addSeconds(30));
-//        app(TwilioService::class)->sendSms("+2{$phone}", "Your CCIT OTP Is: {$otp}");
+        app(TwilioService::class)->sendSms("+2{$phone}", "Your CCIT OTP Is: {$otp}");
 
         return returnResponse([], 'success');
     }
