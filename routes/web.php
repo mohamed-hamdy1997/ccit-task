@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/test', function () {
+    $x = app(\App\Services\MoyasarService::class)->getPayment('4cbb8d21-ac00-4455-b7b1-00485c374258');
+//    $x = app(\App\Services\MoyasarService::class)->getPayment('40e207c6-32d8-4f78-8b04-7f49ce541ebf');
+dd($x['data']);
     return redirect()->route('user.homePage');
 });
 

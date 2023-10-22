@@ -16,13 +16,38 @@ class MoyasarService
         $this->paymentService = $paymentService;
     }
 
+    public function getPayment($paymentId)
+    {
+        try {
+            $res['data'] = $this->paymentService->fetch($paymentId);
+            $res['success'] = true;
+
+            return $res;
+        } catch (\Throwable $exception) {
+            Log::critical($exception->getMessage());
+            $res['message'] = $exception->getMessage();
+            $res['success'] = false;
+
+            return $res;
+        }
+    }
+
     public function refundPayment($paymentId)
     {
         try {
             $payment = $this->paymentService->fetch($paymentId);
             $payment->refund($payment->amount);
+
+            $res['data'] = $payment;
+            $res['success'] = true;
+
+            return $res;
         } catch (\Throwable $exception) {
             Log::critical($exception->getMessage());
+            $res['message'] = $exception->getMessage();
+            $res['success'] = false;
+
+            return $res;
         }
     }
 }
