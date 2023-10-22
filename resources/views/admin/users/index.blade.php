@@ -1,11 +1,11 @@
 @extends('admin.index')
 
 @section('breadcrump-header')
-    Clients
+    Users
 @endsection
 
 @section('content')
-    <div id="lawyersSection" class="row">
+    <div id="usersSection" class="row">
         <div class="col-12">
             <div class="card">
                 <!-- .left-right-aside-column-->
@@ -24,6 +24,7 @@
                                     <th>Email</th>
                                     <th>Phone Number</th>
                                     <th>Joining date</th>
+                                    <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -36,6 +37,11 @@
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->phone_number }}</td>
                                         <td>{{ $user->created_at->toDateTimeString() }}</td>
+                                        <td>
+                                            <button type="button" :disabled="loading" class="btn btn-danger" onclick="deleteUser('{{ $user->id }}')">
+                                                Delete
+                                            </button>
+                                        </td>
                                     </tr>
                                 @endforeach
 
@@ -54,28 +60,28 @@
 @section('scripts')
     <script>
         var __users__ = new Vue({
-            el: '#lawyersSection',
-            data: {},
+            el: '#usersSection',
+            data: {
+                loading: false,
+            },
             methods: {
-                updateStatus(id) {
-                    {{--let route = '{{route('admin.updateLawyerStatus', ':id')}}'--}}
-                    let route = ''
+                deleteUser(id, event) {
+                    let route = '{{route('admin.deleteUser', ':id')}}'
                     route = route.replace(':id', id);
-                    axios.put(route, {
-                        status: $('#status-' + id).val(),
-                    }).then((res) => {
-                        alert('done, updated successfully.');
+                    axios.delete(route).then((res) => {
+                        event.target.closest('tr').remove()
+                        alert('done, deleted successfully.');
                     }).catch((error) => {
                         alert(error.response.data.error);
                     });
                 }
             }
         });
-    </script>
 
-    <script>
-        function updateStatus(id) {
-            __users__.updateStatus(id);
+        function deleteUser(id) {
+            if(confirm('Are you sure ? ')) {
+                __users__.deleteUser(id, event);
+            }
         }
     </script>
 @endsection

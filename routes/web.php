@@ -38,6 +38,7 @@ Route::post('login', [\App\Http\Controllers\User\AuthController::class, 'login']
 Route::group(['middleware' => ['admin']], function () {
     Route::get('admin-logout', [\App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('admin.logout');
     Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'getAllUsers'])->name('admin.getAllUsers');
+    Route::delete('user/{userId}', [\App\Http\Controllers\Admin\UserController::class, 'deleteUser'])->name('admin.deleteUser');
 });
 
 Route::group(['middleware' => ['user']], function () {
