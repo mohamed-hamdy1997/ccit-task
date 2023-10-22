@@ -36,6 +36,15 @@
             border-radius: 0.25rem !important;
             transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out !important;
         }
+
+        .disabled {
+            pointer-events: none;
+            cursor: default;
+        }
+
+        .invalid-input {
+           border: 1px solid #F00 !important;
+        }
     </style>
 </head>
 
